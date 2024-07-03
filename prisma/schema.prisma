@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model TDUser {
+  userId       String    @id @default(uuid()) @map("td_user_id")
+  email        String    @unique @map("td_user_email")
+  username     String    @unique @map("td_user_username")
+  password     String    @map("td_user_passwoerd")
+  phone        String    @map("td_user_phone")
+  apiKey       String?   @map("td_user_api_key")
+  apiSecret    String?   @map("td_user_api_secret")
+  createdAt    DateTime  @default(now()) @map("td_user_created_at")
+  updatedAt    DateTime  @default(now()) @map("td_user_updated_at")
+  deletedAt    DateTime? @map("td_user_deleted_at")
+  isActive     Boolean   @default(false) @map("td_user_is_active")
+  timezoneCode String?    @map("td_user_timezone_code")
+
+  @@map("td_user")
+}
