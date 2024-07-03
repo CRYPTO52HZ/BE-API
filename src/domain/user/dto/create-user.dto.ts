@@ -2,13 +2,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNotEmpty,
-  IsPhoneNumber,
   IsString,
   IsStrongPassword,
   IsTimeZone,
   MaxLength,
   MinLength,
-  minLength,
 } from 'class-validator';
 import { IsPasswordMatching } from 'src/common/decorator/match.decorator';
 import { ValidatePhone } from 'src/common/decorator/phone-valid.decorator';

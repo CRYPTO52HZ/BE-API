@@ -1,6 +1,6 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiBadRequestResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { ApiOperationDecorator } from 'src/common/decorator/api-operation.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 
