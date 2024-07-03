@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "td_user" ALTER COLUMN "td_user_created_at" SET DATA TYPE TIMESTAMPTZ,
+ALTER COLUMN "td_user_updated_at" SET DATA TYPE TIMESTAMPTZ,
+ALTER COLUMN "td_user_deleted_at" SET DATA TYPE TIMESTAMPTZ;
