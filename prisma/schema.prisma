@@ -14,18 +14,45 @@ datasource db {
 }
 
 model TDUser {
-  userId       String    @id @default(uuid()) @map("td_user_id") @db.Uuid()
-  email        String    @unique @map("td_user_email") @db.VarChar(255)
-  username     String    @unique @map("td_user_username") @db.VarChar(255)
-  password     String    @map("td_user_passwoerd") @db.VarChar(255)
-  phone        String    @map("td_user_phone") @db.VarChar(15)
-  apiKey       String?   @map("td_user_api_key") @db.VarChar(255)
-  apiSecret    String?   @map("td_user_api_secret") @db.VarChar(255)
-  createdAt    DateTime  @default(now()) @map("td_user_created_at") @db.Timestamptz()
-  updatedAt    DateTime  @default(now()) @map("td_user_updated_at") @db.Timestamptz()
-  deletedAt    DateTime? @map("td_user_deleted_at") @db.Timestamptz()
-  isActive     Boolean   @default(false) @map("td_user_is_active") @db.Boolean()
-  timezoneCode String?   @map("td_user_timezone_code") @db.VarChar(255)
+  userId       String     @id @default(uuid()) @map("td_user_id") @db.Uuid()
+  email        String     @unique @map("td_user_email") @db.VarChar(255)
+  username     String     @unique @map("td_user_username") @db.VarChar(255)
+  password     String     @map("td_user_passwoerd") @db.VarChar(255)
+  phone        String     @map("td_user_phone") @db.VarChar(15)
+  apiKey       String?    @map("td_user_api_key") @db.VarChar(255)
+  apiSecret    String?    @map("td_user_api_secret") @db.VarChar(255)
+  createdAt    DateTime   @default(now()) @map("td_user_created_at") @db.Timestamptz()
+  updatedAt    DateTime   @default(now()) @map("td_user_updated_at") @db.Timestamptz()
+  deletedAt    DateTime?  @map("td_user_deleted_at") @db.Timestamptz()
+  isActive     Boolean    @default(false) @map("td_user_is_active") @db.Boolean()
+  timezoneCode String?    @map("td_user_timezone_code") @db.VarChar(255)
+  TDWallet     TDWallet[]
 
   @@map("td_user")
+}
+
+model TDWalletType {
+  typeId    String     @id @default(uuid()) @map("td_wallet_type_id") @db.Uuid()
+  typeName  String     @unique @map("td_wallet_type_name") @db.VarChar(255)
+  createdAt DateTime   @default(now()) @map("td_wallet_type_created_at") @db.Timestamptz()
+  updatedAt DateTime   @default(now()) @map("td_wallet_type_updated_at") @db.Timestamptz()
+  deletedAt DateTime?  @map("td_wallet_type_deleted_at") @db.Timestamptz()
+  TDWallet  TDWallet[]
+
+  @@map("td_wallet_type")
+}
+
+model TDWallet {
+  walletId   String    @id @default(uuid()) @map("td_wallet_id") @db.Uuid()
+  userId     String    @map("td_wallet_user_id") @db.Uuid()
+  walletType String    @map("td_wallet_type_id") @db.Uuid()
+  balance    Decimal   @map("td_wallet_balance") @db.Decimal()
+  createdAt  DateTime  @default(now()) @map("td_wallet_created_at") @db.Timestamptz()
+  updatedAt  DateTime  @default(now()) @map("td_wallet_updated_at") @db.Timestamptz()
+  deletedAt  DateTime? @map("td_wallet_deleted_at") @db.Timestamptz()
+
+  type TDWalletType @relation(fields: [walletType], references: [typeId])
+  user TDUser       @relation(fields: [userId], references: [userId])
+
+  @@map("td_wallet")
 }
