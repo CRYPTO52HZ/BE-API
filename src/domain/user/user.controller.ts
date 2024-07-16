@@ -5,12 +5,14 @@ import { ApiOperationDecorator } from 'src/common/decorator/api-operation.decora
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserReq } from 'src/common/decorator/user.decorator';
 import { TDUser } from '@prisma/client';
+import { Public } from 'src/common/decorator/public.decorator';
 
 @ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userSerice: UserService) {}
 
+  @Public()
   @ApiOperationDecorator({
     summary: 'Create a new user',
     description: 'Create a new user',

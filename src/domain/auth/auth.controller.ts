@@ -3,14 +3,13 @@ import { AuthService } from './auth.service';
 import { ApiTags } from '@nestjs/swagger';
 import { UserSingInDto } from './dto/user-sign-in.dto';
 import { ApiOperationDecorator } from 'src/common/decorator/api-operation.decorator';
-import { Public } from 'src/common/decorator/public.decorator';
 
 @Controller()
 @ApiTags('Authentication')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Public()
+
   @ApiOperationDecorator({
     summary: 'User sign in',
     description: 'User sign in',

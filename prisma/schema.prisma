@@ -14,18 +14,18 @@ datasource db {
 }
 
 model TDUser {
-  userId       String    @id @default(uuid()) @map("td_user_id")
-  email        String    @unique @map("td_user_email")
-  username     String    @unique @map("td_user_username")
-  password     String    @map("td_user_passwoerd")
-  phone        String    @map("td_user_phone")
-  apiKey       String?   @map("td_user_api_key")
-  apiSecret    String?   @map("td_user_api_secret")
-  createdAt    DateTime  @default(now()) @map("td_user_created_at")
-  updatedAt    DateTime  @default(now()) @map("td_user_updated_at")
-  deletedAt    DateTime? @map("td_user_deleted_at")
-  isActive     Boolean   @default(false) @map("td_user_is_active")
-  timezoneCode String?   @map("td_user_timezone_code")
+  userId       String    @id @default(uuid()) @map("td_user_id") @db.Uuid()
+  email        String    @unique @map("td_user_email") @db.VarChar(255)
+  username     String    @unique @map("td_user_username") @db.VarChar(255)
+  password     String    @map("td_user_passwoerd") @db.VarChar(255)
+  phone        String    @map("td_user_phone") @db.VarChar(15)
+  apiKey       String?   @map("td_user_api_key") @db.VarChar(255)
+  apiSecret    String?   @map("td_user_api_secret") @db.VarChar(255)
+  createdAt    DateTime  @default(now()) @map("td_user_created_at") @db.Timestamptz()
+  updatedAt    DateTime  @default(now()) @map("td_user_updated_at") @db.Timestamptz()
+  deletedAt    DateTime? @map("td_user_deleted_at") @db.Timestamptz()
+  isActive     Boolean   @default(false) @map("td_user_is_active") @db.Boolean()
+  timezoneCode String?   @map("td_user_timezone_code") @db.VarChar(255)
 
   @@map("td_user")
 }
