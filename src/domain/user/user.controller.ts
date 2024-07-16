@@ -1,8 +1,10 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiBadRequestResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { ApiOperationDecorator } from 'src/common/decorator/api-operation.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UserReq } from 'src/common/decorator/user.decorator';
+import { TDUser } from '@prisma/client';
 
 @ApiTags('User')
 @Controller('user')
@@ -16,5 +18,10 @@ export class UserController {
   @Post('/register')
   register(@Body() data: CreateUserDto) {
     return this.userSerice.register(data);
+  }
+
+  @Get('/me')
+  getMe(@UserReq() user: TDUser) {
+    return user;
   }
 }
