@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApiOperationDecorator } from 'src/common/decorator/api-operation.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserReq } from 'src/common/decorator/user.decorator';
@@ -9,6 +9,7 @@ import { Public } from 'src/common/decorator/public.decorator';
 
 @ApiTags('User')
 @Controller('user')
+@ApiBearerAuth('access-token')
 export class UserController {
   constructor(private readonly userSerice: UserService) {}
 
