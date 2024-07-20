@@ -11,7 +11,6 @@ export class BaseService<CreateDto, UpdateDto> {
   }
 
   create(data: CreateDto) {
-    return this.databaseService[this.modelName].create({ data });
+    return this.databaseService[this.modelName].create(data);
   }
-
 }
