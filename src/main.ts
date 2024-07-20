@@ -18,12 +18,12 @@ async function bootstrap() {
       {
         description: `[just text field] Please enter token in following format: Bearer <JWT>`,
         name: 'Authorization',
-        bearerFormat: 'Bearer', 
+        bearerFormat: 'Bearer',
         scheme: 'Bearer',
-        type: 'http', 
+        type: 'http',
         in: 'Header',
       },
-      'access-token', 
+      'access-token',
     )
     .build();
   const document = SwaggerModule.createDocument(app, config);
@@ -39,6 +39,6 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  await app.listen(3000);
+  await app.listen(+process.env.APP_PORT);
 }
 bootstrap();
