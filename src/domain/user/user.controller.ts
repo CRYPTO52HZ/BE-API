@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApiOperationDecorator } from 'src/common/decorator/api-operation.decorator';
@@ -21,6 +21,15 @@ export class UserController {
   @Post('/register')
   register(@Body() data: CreateUserDto) {
     return this.userSerice.register(data);
+  }
+
+  @ApiOperationDecorator({
+    summary: 'Get all users success',
+    description: 'Get all users',
+  })
+  @Get('/all-users')
+  allUsers() {
+    return this.userSerice.findMany();
   }
 
   @Get('/me')

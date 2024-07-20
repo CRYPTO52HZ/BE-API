@@ -2,10 +2,17 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma, TDUser } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import * as bcrypt from 'bcrypt';
+import { BaseService } from 'src/common/service/base.serivce';
 
 @Injectable()
-export class UserService {
-  constructor(private databaseService: DatabaseService) {}
+export class UserService extends BaseService<
+  Prisma.TDUserCreateArgs,
+  Prisma.TDUserUpdateInput
+> {
+  constructor(databaseService: DatabaseService) {
+    const modelName: string = 'TDUser';
+    super(databaseService, modelName);
+  }
 
   //register
   async register(data: Prisma.TDUserCreateInput) {
@@ -17,9 +24,7 @@ export class UserService {
       password: hashedPassword,
       timezoneCode: data.timezoneCode,
     };
-    return this.databaseService.tDUser.create({
-      data: newUser,
-    });
+    return this.create({ data: newUser });
   }
   //register
 
