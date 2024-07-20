@@ -5,9 +5,19 @@ import { DatabaseModule } from './database/database.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './domain/auth/guard/auth.guard';
 import { WalletTypeModule } from './domain/wallet-type/wallet-type.module';
+import { ConfigModule } from '@nestjs/config';
+import { validate } from './configuration/index.config';
 
 @Module({
-  imports: [UserModule, WalletTypeModule, AuthModule, DatabaseModule],
+  imports: [
+    ConfigModule.forRoot({
+      validate,
+    }),
+    UserModule,
+    WalletTypeModule,
+    AuthModule,
+    DatabaseModule,
+  ],
   controllers: [],
   providers: [
     {

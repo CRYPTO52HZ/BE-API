@@ -2,8 +2,8 @@ services:
   db:
     image: postgres:13-alpine
     environment:
-      POSTGRES_PASSWORD: '123456'
-      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 'BfZTbHC0u7Np'
+      POSTGRES_USER: crypto_owner
       POSTGRES_DB: crypto
       PG_DATA: /var/lib/postgresql/data
     volumes:
