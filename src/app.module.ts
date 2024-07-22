@@ -8,12 +8,14 @@ import { WalletTypeModule } from './domain/wallet-type/wallet-type.module';
 import { ConfigModule } from '@nestjs/config';
 import { validate } from './configuration/index.config';
 import { LoggerMiddleware } from './middleware/logger.middlware';
+import { HealthModule } from './domain/health/health.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       validate,
     }),
+    HealthModule,
     UserModule,
     WalletTypeModule,
     AuthModule,
