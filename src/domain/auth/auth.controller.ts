@@ -7,7 +7,7 @@ import { Public } from 'src/common/decorator/public.decorator';
 
 @Controller()
 @ApiTags('Authentication')
-@ApiBearerAuth('access-token')
+@ApiBearerAuth()
 export class AuthController {
   constructor(private authService: AuthService) {}
 

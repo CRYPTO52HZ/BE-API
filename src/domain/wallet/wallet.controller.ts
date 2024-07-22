@@ -2,7 +2,7 @@ import { Controller } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller()
-@ApiBearerAuth('access-token')
+@ApiBearerAuth()
 export class WalletController {
   constructor() {}
 }

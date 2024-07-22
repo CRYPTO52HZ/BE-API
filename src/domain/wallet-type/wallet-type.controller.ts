@@ -5,7 +5,7 @@ import { CreateWalletTypeDto } from './dto/create-wallet-type.dto';
 import { ApiOperationDecorator } from 'src/common/decorator/api-operation.decorator';
 
 @ApiTags('Wallet Type')
-@ApiBearerAuth('access-token')
+@ApiBearerAuth()
 @Controller('wallet-type')
 export class WalletTypeController {
   constructor(private walletTypeService: WalletTypeService) {}
