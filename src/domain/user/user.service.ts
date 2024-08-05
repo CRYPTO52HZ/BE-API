@@ -1,15 +1,25 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Prisma, TDUser } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import * as bcrypt from 'bcrypt';
 import { BaseService } from 'src/common/service/base.serivce';
+import { catchError, firstValueFrom, lastValueFrom, map } from 'rxjs';
+import { HttpService } from '@nestjs/axios';
+import * as Crypto from 'crypto';
 
 @Injectable()
 export class UserService extends BaseService<
   Prisma.TDUserCreateArgs,
   Prisma.TDUserUpdateInput
 > {
-  constructor(databaseService: DatabaseService) {
+  constructor(
+    databaseService: DatabaseService,
+    private readonly httpService: HttpService,
+  ) {
     const modelName: string = 'TDUser';
     super(databaseService, modelName);
   }
@@ -49,4 +59,51 @@ export class UserService extends BaseService<
     return user;
   }
   //find by email
+
+  generateSignature(params: string, apiSecret: string) {
+    const key = Buffer.from(apiSecret, 'utf8');
+    const hmac = Crypto.createHmac('sha256', key);
+    hmac.update(params, 'utf8');
+    const digest = hmac.digest('hex');
+    return digest;
+  }
+
+  //add keys for user
+  async addKeysOfThirdParty(
+    apiKey: string,
+    apiSecret: string,
+    endPoint: string,
+  ) {
+    try {
+      const baseUrl = process.env.BASE_URL_THIRD_PARTY;
+      const timestamp = Number(new Date());
+      let params = `recvWindow=${process.env.RECVWINDOW}&timestamp=${timestamp}`;
+      const signature = this.generateSignature(params, apiSecret);
+      params += `&signature=${signature}`;
+      const fullUrl = `${baseUrl}/${endPoint}?${params}`;
+      console.log(fullUrl);
+      const request = this.httpService.get(fullUrl, {
+        headers: {
+          'X-MBX-APIKEY': apiKey,
+        },
+      });
+      const response = await lastValueFrom(request);
+      if (response.status == 200) {
+        // return this.databaseService.tDUser.update({
+        //   where : {
+
+        //   },
+        //   data : {
+        //     apiKey : apiKey,
+        //     apiSecret : apiSecret
+        //   }
+        // })
+      } else {
+        throw new NotFoundException(response.statusText);
+      }
+    } catch (error) {
+      throw new NotFoundException(error);
+    }
+  }
+  //add keys for user
 }
