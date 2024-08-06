@@ -1,9 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post
-} from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ApiOperationDecorator } from 'src/common/decorator/api-operation.decorator';
@@ -51,6 +46,7 @@ export class UserController {
   addKeys(@Body() body: UserAddKeysDto) {
     const endpoint: string = 'fapi/v3/account';
     return this.userService.addKeysOfThirdParty(
+      body.userId,
       body.apiKey,
       body.apiSecret,
       endpoint,

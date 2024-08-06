@@ -60,6 +60,7 @@ export class UserService extends BaseService<
   }
   //find by email
 
+  //generate signature
   generateSignature(params: string, apiSecret: string) {
     const key = Buffer.from(apiSecret, 'utf8');
     const hmac = Crypto.createHmac('sha256', key);
@@ -67,43 +68,44 @@ export class UserService extends BaseService<
     const digest = hmac.digest('hex');
     return digest;
   }
+  //generate signature
 
   //add keys for user
   async addKeysOfThirdParty(
+    userId: string,
     apiKey: string,
     apiSecret: string,
     endPoint: string,
   ) {
-    try {
-      const baseUrl = process.env.BASE_URL_THIRD_PARTY;
-      const timestamp = Number(new Date());
-      let params = `recvWindow=${process.env.RECVWINDOW}&timestamp=${timestamp}`;
-      const signature = this.generateSignature(params, apiSecret);
-      params += `&signature=${signature}`;
-      const fullUrl = `${baseUrl}/${endPoint}?${params}`;
-      console.log(fullUrl);
-      const request = this.httpService.get(fullUrl, {
+    const baseUrl = process.env.BASE_URL_THIRD_PARTY;
+    const timestamp = Number(new Date());
+    let params = `recvWindow=${process.env.RECVWINDOW}&timestamp=${timestamp}`;
+    const signature = this.generateSignature(params, apiSecret);
+    params += `&signature=${signature}`;
+    const fullUrl = `${baseUrl}/${endPoint}?${params}`;
+    const request = this.httpService
+      .get(fullUrl, {
         headers: {
           'X-MBX-APIKEY': apiKey,
         },
+      })
+      .pipe(
+        catchError(() => {
+          throw new ForbiddenException('Access or secret key invalid');
+        }),
+      );
+    const response = await lastValueFrom(request);
+    if (response.status == 200) {
+      return this.databaseService.tDUser.update({
+        where: {
+          userId: userId,
+        },
+        data: {
+          apiKey: apiKey,
+          apiSecret: apiSecret,
+        },
       });
-      const response = await lastValueFrom(request);
-      if (response.status == 200) {
-        // return this.databaseService.tDUser.update({
-        //   where : {
-
-        //   },
-        //   data : {
-        //     apiKey : apiKey,
-        //     apiSecret : apiSecret
-        //   }
-        // })
-      } else {
-        throw new NotFoundException(response.statusText);
-      }
-    } catch (error) {
-      throw new NotFoundException(error);
     }
+    //add keys for user
   }
-  //add keys for user
 }

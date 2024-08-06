@@ -1,7 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export class UserAddKeysDto {
+  @IsUUID()
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty({
+    example: '31c94b45-c842-4dee-bc75-375ad487504e',
+  })
+  userId: string;
+
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
