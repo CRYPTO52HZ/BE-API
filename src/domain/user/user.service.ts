@@ -1,15 +1,12 @@
 import {
-  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Prisma, TDUser } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import * as bcrypt from 'bcrypt';
-import { BaseService } from 'src/common/service/base.serivce';
-import { catchError, firstValueFrom, lastValueFrom, map } from 'rxjs';
-import { HttpService } from '@nestjs/axios';
-import * as Crypto from 'crypto';
+import { BaseService } from 'src/common/service/base.service';
+import { BaseBinanceService } from 'src/common/service/base-binance.service';
 
 @Injectable()
 export class UserService extends BaseService<
@@ -18,7 +15,7 @@ export class UserService extends BaseService<
 > {
   constructor(
     databaseService: DatabaseService,
-    private readonly httpService: HttpService,
+    private readonly baseBinaceService: BaseBinanceService,
   ) {
     const modelName: string = 'TDUser';
     super(databaseService, modelName);
@@ -60,16 +57,6 @@ export class UserService extends BaseService<
   }
   //find by email
 
-  //generate signature
-  generateSignature(params: string, apiSecret: string) {
-    const key = Buffer.from(apiSecret, 'utf8');
-    const hmac = Crypto.createHmac('sha256', key);
-    hmac.update(params, 'utf8');
-    const digest = hmac.digest('hex');
-    return digest;
-  }
-  //generate signature
-
   //add keys for user
   async addKeysOfThirdParty(
     userId: string,
@@ -77,24 +64,12 @@ export class UserService extends BaseService<
     apiSecret: string,
     endPoint: string,
   ) {
-    const baseUrl = process.env.BASE_URL_THIRD_PARTY;
-    const timestamp = Number(new Date());
-    let params = `recvWindow=${process.env.RECVWINDOW}&timestamp=${timestamp}`;
-    const signature = this.generateSignature(params, apiSecret);
-    params += `&signature=${signature}`;
-    const fullUrl = `${baseUrl}/${endPoint}?${params}`;
-    const request = this.httpService
-      .get(fullUrl, {
-        headers: {
-          'X-MBX-APIKEY': apiKey,
-        },
-      })
-      .pipe(
-        catchError(() => {
-          throw new ForbiddenException('Access or secret key invalid');
-        }),
-      );
-    const response = await lastValueFrom(request);
+    const fullUrl = await this.baseBinaceService.genUrl(
+      null,
+      apiSecret,
+      endPoint,
+    );
+    const response = await this.baseBinaceService.binanceGet(apiKey, fullUrl);
     if (response.status == 200) {
       return this.databaseService.tDUser.update({
         where: {
