@@ -26,7 +26,7 @@ export class BaseBinanceService {
   // base method get
 
   //   generate full url
-  async genUrl(params: string | null, apiSecret: string, endpoint: string) {
+  genUrl(params: string | null, apiSecret: string, endpoint: string) {
     const baseUrl = process.env.BASE_URL_THIRD_PARTY;
     const timestamp = Number(new Date());
     let baseParams = `recvWindow=${process.env.RECVWINDOW}&timestamp=${timestamp}`;

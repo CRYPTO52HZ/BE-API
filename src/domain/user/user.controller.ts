@@ -43,10 +43,10 @@ export class UserController {
     description: 'Add keys (api / secret) for user',
   })
   @Post('/add-keys')
-  addKeys(@Body() body: UserAddKeysDto) {
+  addKeys(@UserReq() user: TDUser, @Body() body: UserAddKeysDto) {
     const endpoint: string = 'fapi/v3/account';
     return this.userService.addKeysOfThirdParty(
-      body.userId,
+      user.userId,
       body.apiKey,
       body.apiSecret,
       endpoint,

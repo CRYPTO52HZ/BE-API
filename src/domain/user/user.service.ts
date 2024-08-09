@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import * as bcrypt from 'bcrypt';
@@ -64,14 +61,10 @@ export class UserService extends BaseService<
     apiSecret: string,
     endPoint: string,
   ) {
-    const fullUrl = await this.baseBinaceService.genUrl(
-      null,
-      apiSecret,
-      endPoint,
-    );
+    const fullUrl = this.baseBinaceService.genUrl(null, apiSecret, endPoint);
     const response = await this.baseBinaceService.binanceGet(apiKey, fullUrl);
     if (response.status == 200) {
-      return this.databaseService.tDUser.update({
+      return await this.databaseService.tDUser.update({
         where: {
           userId: userId,
         },
@@ -81,6 +74,6 @@ export class UserService extends BaseService<
         },
       });
     }
-    //add keys for user
   }
+  //add keys for user
 }
