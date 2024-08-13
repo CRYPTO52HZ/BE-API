@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { DatabaseService } from 'src/database/database.service';
 import * as bcrypt from 'bcrypt';
-import { BaseService } from 'src/common/service/base.service';
-import { BaseBinanceService } from 'src/common/service/base-binance.service';
+import { BaseService } from 'src/common/service/db-service/base.service';
+import { BaseBinanceService } from 'src/common/service/binance-service/base-binance.service';
 
 @Injectable()
 export class UserService extends BaseService<
